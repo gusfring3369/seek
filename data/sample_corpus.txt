@@ -1,0 +1,40 @@
+Distributed consensus using Raft with leader election and log replication
+Paxos and Raft are consensus algorithms for replicated state machines
+High performance distributed database built on a B+ tree storage engine
+LSM tree storage engines trade read amplification for fast sequential writes
+Kernel packet filtering using eBPF programs and an XDP load balancer
+Distributed key value storage engine with a skip list memtable and write ahead log
+Consistent hashing spreads keys across nodes and limits rebalancing when nodes join
+Bloom filters answer set membership queries with no false negatives
+Inverted indexes map each term to a sorted posting list of document ids
+Tries store strings by shared prefix and support fast autocomplete
+Levenshtein edit distance counts insertions deletions and substitutions
+Dynamic programming solves edit distance in quadratic time with a table of subproblems
+A min heap of size k keeps the top k largest elements of a stream
+Two pointer merging intersects sorted arrays in linear time
+Galloping search finds an element in a sorted array in logarithmic time from a starting point
+Vector clocks track causality between events in a distributed system
+Gossip protocols spread membership information through random peer exchanges
+Write ahead logging makes database transactions durable across crashes
+Multi version concurrency control lets readers proceed without blocking writers
+Two phase commit coordinates atomic transactions across distributed participants
+Load balancers distribute requests across servers using round robin or least connections
+Rate limiters use token buckets or sliding windows to cap request throughput
+Caches with least recently used eviction keep hot data close to the processor
+Memory allocators reduce fragmentation with size classes and thread local caches
+Lock free queues use compare and swap to avoid blocking under contention
+Garbage collectors trace reachable objects from a root set and reclaim the rest
+Compilers translate source code into an abstract syntax tree before generating machine code
+Recursive descent parsers implement each grammar rule as a function
+Search engines rank documents with tf idf or bm25 relevance scoring
+Stemming reduces words such as running and runs to a common root
+Sharding partitions a database horizontally so each node stores a subset of rows
+Replication keeps copies of data on several nodes for availability and durability
+Eventual consistency allows replicas to diverge temporarily and converge later
+Message queues decouple producers from consumers and absorb traffic spikes
+Stream processing systems compute aggregates over sliding time windows
+Column oriented storage compresses well and speeds up analytical database queries
+Hash maps provide constant time average lookup with open addressing or chaining
+Skip lists give logarithmic search using multiple layers of linked lists
+Radix trees compress chains of single child trie nodes into labeled edges
+Suffix arrays support substring search over large text collections

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: gcc-release, cxx: g++, build_type: Release, sanitize: "OFF" }
+          - { name: clang-release, cxx: clang++, build_type: Release, sanitize: "OFF" }
+          - { name: gcc-asan-ubsan, cxx: g++, build_type: Debug, sanitize: "ON" }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GoogleTest
+        run: sudo apt-get update && sudo apt-get install -y libgtest-dev
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DSEEK_SANITIZE=${{ matrix.sanitize }}
+          -DSEEK_WARNINGS_AS_ERRORS=ON
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check clang-format
+        run: clang-format --dry-run --Werror include/seek/*.hpp src/*.cpp apps/*.cpp bench/*.cpp tests/*.cpp
