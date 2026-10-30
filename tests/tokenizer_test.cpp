@@ -1,32 +1,30 @@
-#include "seek/tokenizer.hpp"
+#include "seek/text/tokenizer.hpp"
 
 #include <gtest/gtest.h>
 
-namespace seek {
-namespace {
+using namespace std;
+using namespace seek;
 
-using Terms = std::vector<std::string>;
+using Terms = vector<string>;
 
 TEST(TokenizerTest, LowercasesAndSplitsOnNonAlphanumerics) {
-    EXPECT_EQ(tokenize("Key-Value B+Tree, v2!"), (Terms{"key", "value", "b", "tree", "v2"}));
+    EXPECT_EQ(Tokenizer().tokenize("Key-Value B+Tree, v2!"),
+              (Terms{"key", "value", "b", "tree", "v2"}));
 }
 
 TEST(TokenizerTest, IgnoresLeadingTrailingAndRepeatedSeparators) {
-    EXPECT_EQ(tokenize("  --hello   world--  "), (Terms{"hello", "world"}));
+    EXPECT_EQ(Tokenizer().tokenize("  --hello   world--  "), (Terms{"hello", "world"}));
 }
 
-TEST(TokenizerTest, EmptyAndSeparatorOnlyInputYieldNoTerms) {
-    EXPECT_TRUE(tokenize("").empty());
-    EXPECT_TRUE(tokenize(" ,.;!? ").empty());
+TEST(TokenizerTest, EmptyAndSeparatorOnlyInputGiveNoTerms) {
+    EXPECT_TRUE(Tokenizer().tokenize("").empty());
+    EXPECT_TRUE(Tokenizer().tokenize(" ,.;!? ").empty());
 }
 
-TEST(TokenizerTest, TreatsNonAsciiBytesAsSeparators) {
-    EXPECT_EQ(tokenize("caf\xC3\xA9 ok"), (Terms{"caf", "ok"}));
+TEST(TokenizerTest, NonAsciiBytesAreSeparators) {
+    EXPECT_EQ(Tokenizer().tokenize("caf\xC3\xA9 ok"), (Terms{"caf", "ok"}));
 }
 
-TEST(TokenizerTest, ToLowerAsciiOnlyChangesLetters) {
-    EXPECT_EQ(toLowerAscii("AbC-12 xY"), "abc-12 xy");
+TEST(TokenizerTest, NormalizeOnlyLowercasesLetters) {
+    EXPECT_EQ(Tokenizer().normalize("AbC-12 xY"), "abc-12 xy");
 }
-
-}  // namespace
-}  // namespace seek

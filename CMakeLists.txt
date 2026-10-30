@@ -32,18 +32,29 @@ else()
     endif()
 endif()
 
-# Core library.
+# Core library, one folder per subsystem.
 add_library(seek
-    src/autocomplete.cpp
-    src/fuzzy.cpp
-    src/inverted_index.cpp
-    src/posting_list.cpp
-    src/query_executor.cpp
-    src/query_parser.cpp
-    src/search_engine.cpp
-    src/top_k_cache.cpp
-    src/tokenizer.cpp
-    src/trie.cpp
+    src/text/tokenizer.cpp
+    src/trie/trie.cpp
+    src/autocomplete/top_k_heap.cpp
+    src/autocomplete/trie_autocompleter.cpp
+    src/autocomplete/cached_autocompleter.cpp
+    src/spellcheck/edit_distance.cpp
+    src/spellcheck/spell_checker.cpp
+    src/index/inverted_index.cpp
+    src/index/two_pointer_intersection.cpp
+    src/index/galloping_intersection.cpp
+    src/index/adaptive_intersection.cpp
+    src/index/posting_list_union.cpp
+    src/query/query_token.cpp
+    src/query/query_lexer.cpp
+    src/query/term_node.cpp
+    src/query/composite_node.cpp
+    src/query/and_node.cpp
+    src/query/or_node.cpp
+    src/query/query_parser.cpp
+    src/engine/document_store.cpp
+    src/engine/search_engine.cpp
 )
 add_library(seek::seek ALIAS seek)
 target_include_directories(seek PUBLIC
@@ -51,13 +62,23 @@ target_include_directories(seek PUBLIC
     $<INSTALL_INTERFACE:include>)
 target_link_libraries(seek PRIVATE seek_options)
 
-# Interactive shell.
-add_executable(seek_cli apps/seek_cli.cpp)
+# Interactive shell (the executable is called `seek`).
+add_executable(seek_cli
+    apps/cli/main.cpp
+    apps/cli/shell.cpp
+    apps/cli/corpus_loader.cpp
+)
 set_target_properties(seek_cli PROPERTIES OUTPUT_NAME seek)
 target_link_libraries(seek_cli PRIVATE seek::seek seek_options)
 
 if(SEEK_BUILD_BENCHMARKS)
-    add_executable(seek_bench bench/seek_bench.cpp)
+    add_executable(seek_bench
+        bench/main.cpp
+        bench/bench_utils.cpp
+        bench/autocomplete_bench.cpp
+        bench/spellcheck_bench.cpp
+        bench/intersection_bench.cpp
+    )
     target_link_libraries(seek_bench PRIVATE seek::seek seek_options)
 endif()
 

@@ -10,15 +10,18 @@ if(NOT GTest_FOUND)
 endif()
 
 add_executable(seek_tests
-    autocomplete_test.cpp
-    fuzzy_test.cpp
-    inverted_index_test.cpp
-    posting_list_test.cpp
-    query_test.cpp
-    search_engine_test.cpp
     tokenizer_test.cpp
-    top_k_cache_test.cpp
     trie_test.cpp
+    top_k_heap_test.cpp
+    trie_autocompleter_test.cpp
+    cached_autocompleter_test.cpp
+    edit_distance_test.cpp
+    spell_checker_test.cpp
+    inverted_index_test.cpp
+    intersection_test.cpp
+    query_parser_test.cpp
+    query_evaluation_test.cpp
+    search_engine_test.cpp
 )
 target_link_libraries(seek_tests PRIVATE seek::seek seek_options GTest::gtest_main)
 

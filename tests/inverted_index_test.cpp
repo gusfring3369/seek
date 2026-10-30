@@ -1,13 +1,13 @@
-#include "seek/inverted_index.hpp"
+#include "seek/index/inverted_index.hpp"
 
 #include <gtest/gtest.h>
 
-namespace seek {
-namespace {
+using namespace std;
+using namespace seek;
 
-using Terms = std::vector<std::string>;
+using Terms = vector<string>;
 
-TEST(InvertedIndexTest, AssignsSequentialIds) {
+TEST(InvertedIndexTest, HandsOutIdsInOrder) {
     InvertedIndex index;
     EXPECT_EQ(index.add(Terms{"a"}), 0u);
     EXPECT_EQ(index.add(Terms{"b"}), 1u);
@@ -15,7 +15,7 @@ TEST(InvertedIndexTest, AssignsSequentialIds) {
     EXPECT_EQ(index.documentCount(), 3u);
 }
 
-TEST(InvertedIndexTest, PostingListsAreSortedAndDeduplicated) {
+TEST(InvertedIndexTest, PostingListsAreSortedWithoutDuplicates) {
     InvertedIndex index;
     index.add(Terms{"raft", "log", "raft"});
     index.add(Terms{"log"});
@@ -25,11 +25,8 @@ TEST(InvertedIndexTest, PostingListsAreSortedAndDeduplicated) {
     EXPECT_EQ(index.termCount(), 2u);
 }
 
-TEST(InvertedIndexTest, UnknownTermHasEmptyPostings) {
+TEST(InvertedIndexTest, UnknownTermHasNoPostings) {
     InvertedIndex index;
     index.add(Terms{"x"});
     EXPECT_TRUE(index.postings("missing").empty());
 }
-
-}  // namespace
-}  // namespace seek

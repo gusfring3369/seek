@@ -36,4 +36,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check clang-format
-        run: clang-format --dry-run --Werror include/seek/*.hpp src/*.cpp apps/*.cpp bench/*.cpp tests/*.cpp
+        run: clang-format --dry-run --Werror $(git ls-files "*.hpp" "*.cpp")

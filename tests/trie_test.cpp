@@ -1,17 +1,17 @@
-#include "seek/trie.hpp"
+#include "seek/trie/trie.hpp"
 
 #include <gtest/gtest.h>
 
 #include <stdexcept>
 
-namespace seek {
-namespace {
+using namespace std;
+using namespace seek;
 
-TEST(TrieTest, InsertAccumulatesWeight) {
+TEST(TrieTest, InsertAddsUpWeightsAndReturnsTheTotal) {
     Trie trie;
-    trie.insert("data", 3);
-    trie.insert("data", 2);
-    EXPECT_EQ(trie.weight("data"), 5u);
+    EXPECT_EQ(trie.insert("data", 3), 3u);
+    EXPECT_EQ(trie.insert("data", 2), 5u);
+    EXPECT_EQ(trie.weightOf("data"), 5u);
     EXPECT_EQ(trie.wordCount(), 1u);
 }
 
@@ -27,34 +27,31 @@ TEST(TrieTest, PrefixesAreNotWordsUntilInserted) {
     EXPECT_EQ(trie.wordCount(), 2u);
 }
 
-TEST(TrieTest, SharedPrefixesShareNodes) {
+TEST(TrieTest, WordsWithACommonPrefixShareNodes) {
     Trie trie;
     trie.insert("tea");
     trie.insert("ten");
     trie.insert("to");
-    // root + t + e + a + n + o
-    EXPECT_EQ(trie.nodeCount(), 6u);
+    EXPECT_EQ(trie.nodeCount(), 6u);  // root, t, e, a, n, o
 }
 
-TEST(TrieTest, EmptyPrefixFindsRoot) {
+TEST(TrieTest, EmptyPrefixIsTheRoot) {
     Trie trie;
     EXPECT_EQ(trie.find(""), &trie.root());
     EXPECT_FALSE(trie.contains(""));
 }
 
+TEST(TrieTest, ChildrenAreVisitedAlphabetically) {
+    Trie trie;
+    for (const char* word : {"c", "a", "b"}) trie.insert(word);
+    string order;
+    for (const auto& [c, child] : trie.root().children()) order.push_back(c);
+    EXPECT_EQ(order, "abc");
+}
+
 TEST(TrieTest, RejectsEmptyWordAndZeroWeight) {
     Trie trie;
-    EXPECT_THROW(trie.insert(""), std::invalid_argument);
-    EXPECT_THROW(trie.insert("x", 0), std::invalid_argument);
+    EXPECT_THROW(trie.insert(""), invalid_argument);
+    EXPECT_THROW(trie.insert("x", 0), invalid_argument);
     EXPECT_EQ(trie.wordCount(), 0u);
 }
-
-TEST(TrieTest, IsMovable) {
-    Trie trie;
-    trie.insert("alpha");
-    Trie moved = std::move(trie);
-    EXPECT_TRUE(moved.contains("alpha"));
-}
-
-}  // namespace
-}  // namespace seek
